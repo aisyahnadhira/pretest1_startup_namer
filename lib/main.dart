@@ -12,14 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Startup Name Generator',
-      home: RandomWords(
-
-          // body: Center(
-          //   child: Text('Hello World'),
-          //   child: Text(wordPair.asPascalCase),
-          //   child: RandomWords(),
-          // ),
-          ),
+      home: RandomWords(),
     );
   }
 }
@@ -30,43 +23,42 @@ class RandomWords extends StatefulWidget {
 }
 
 class _RandomWordsState extends State<RandomWords> {
-  @override
+  final _suggestions = <WordPair>[];
+  final _biggerFont = const TextStyle(fontSize: 18);
+
   Widget build(BuildContext context) {
-    final _suggestions = <WordPair>[];
-    final _biggerFont = const TextStyle(fontSize: 18);
-
-    Widget _buildSuggestions() {
-      Widget _buildRow(WordPair pair) {
-        return ListTile(
-          title: Text(
-            pair.asPascalCase,
-            style: _biggerFont,
-          ),
-        );
-      }
-
-      return ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemBuilder: (context, i) {
-          if (i.isOdd) {
-            return const Divider();
-          }
-
-          final index = i ~/ 2;
-
-          if (index >= _suggestions.length) {
-            _suggestions.addAll(generateWordPairs().take(10));
-          }
-          return _buildRow(_suggestions[index]);
-        },
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Startup Name Generator'),
       ),
       body: _buildSuggestions(),
+    );
+  }
+
+  Widget _buildRow(WordPair pair) {
+    return ListTile(
+      title: Text(
+        pair.asPascalCase,
+        style: _biggerFont,
+      ),
+    );
+  }
+
+  Widget _buildSuggestions() {
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemBuilder: (context, i) {
+        if (i.isOdd) {
+          return const Divider();
+        }
+
+        final index = i ~/ 2;
+
+        if (index >= _suggestions.length) {
+          _suggestions.addAll(generateWordPairs().take(10));
+        }
+        return _buildRow(_suggestions[index]);
+      },
     );
   }
 }
